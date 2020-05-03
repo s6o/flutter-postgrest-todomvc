@@ -1,5 +1,6 @@
 -- migrate:up
 
+DROP ROLE IF EXISTS todo_user;
 CREATE ROLE todo_user nologin;
 GRANT todo_user TO authenticator;
 
