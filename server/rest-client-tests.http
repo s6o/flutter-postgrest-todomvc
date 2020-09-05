@@ -1,0 +1,20 @@
+### Executable with VSCode REST Client extension
+
+### When testing routes which require Authorization header
+### execute /rpc/login first, then copy returned JWT token into
+### respective request
+
+
+### Auth, return token
+POST http://localhost:3000/rpc/login HTTP/1.1
+Content-Type: application/json
+Content-Profile: app_auth
+
+{
+    "email": "john.doe@lost.net",
+    "pass": "johnny88"
+}
+
+### Todo-s
+GET http://localhost:3000/todos HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTU5OTM0NDg0MX0.wAEsHgHBGmNxE9iVx24hcgO5HiDNGPffaij3YB6vTF8
