@@ -85,7 +85,7 @@ BEGIN
         RAISE invalid_password USING message = 'invalid user or password';
     END IF;
 
-    SELECT pgjwt.sign(row_to_json(r), current_setting('app.jwt_secret')) AS token
+    SELECT app_auth.sign(row_to_json(r), current_setting('app.jwt_secret')) AS token
     FROM (
         SELECT
           _role AS role,
@@ -106,8 +106,9 @@ DROP ROLE IF EXISTS authenticator;
 DROP ROLE IF EXISTS anon;
 DROP ROLE IF EXISTS appuser;
 
-CREATE ROLE anon;
 CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'todo-auth';
+CREATE ROLE anon NOINHERIT;
+GRANT anon TO authenticator;
 
 CREATE ROLE appuser NOLOGIN;
 GRANT appuser TO authenticator;
