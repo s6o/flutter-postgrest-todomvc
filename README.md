@@ -1,4 +1,7 @@
-# WIP: Flutter PostgREST TodoMVC
+# Flutter PostgREST TodoMVC
+
+A TodoMVC with Flutter for Android, iOS and Web, and with PostgREST to control
+the backend PostgreSQL database.
 
 An example of a small [Flutter](https://flutter.dev/) application using
 [Postgres](https://www.postgresql.org/) via [PostgREST](https://github.com/PostgREST/postgrest)
