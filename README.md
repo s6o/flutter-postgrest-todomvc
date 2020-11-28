@@ -58,6 +58,22 @@ psql -U ols -d flutter_todomvc -f ./seed-development.sql
 
 ### Starting server
 
+#### MacOS
+
+```bash
+cd server
+wget https://github.com/PostgREST/postgrest/releases/download/v7.0.1/postgrest-v7.0.1-osx.tar.xz
+tar -xJf postgrest-v7.0.1-osx.tar.xz
+```
+
+#### Linux
+
+```bash
+cd server
+wget https://github.com/PostgREST/postgrest/releases/download/v7.0.1/postgrest-v7.0.1-linux-x64-static.tar.xz
+tar -xJf postgrest-v7.0.1-linux-x64-static.tar.xz
+```
+
 ```bash
 cd server
 ./pgrest.sh

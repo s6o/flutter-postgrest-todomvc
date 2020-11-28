@@ -1,2 +1,3 @@
 .jwtsecret
 postgrest
+postgrest*.tar.xz
