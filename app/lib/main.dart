@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'main.mapper.g.dart' show initializeJsonMapper;
+
 void main() {
+  initializeJsonMapper();
   runApp(MyApp());
 }
 
