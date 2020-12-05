@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todomvc/models/todo.dart';
 
 import 'main.mapper.g.dart' show initializeJsonMapper;
 
