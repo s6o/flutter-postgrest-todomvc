@@ -1,69 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:todomvc/models/todo.dart';
+import 'package:provider/provider.dart';
+import 'package:todomvc/login.dart';
+import 'package:todomvc/models/app_model.dart';
+import 'package:todomvc/todos.dart';
 
 import 'main.mapper.g.dart' show initializeJsonMapper;
 
 void main() {
   initializeJsonMapper();
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AppModel(),
+      child: TodoMVC(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class TodoMVC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter TodoMVC with PostgREST',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Flutter TodoMVC with PostgREST'),
+        ),
+        body: Consumer<AppModel>(
+          builder: (BuildContext ctx, AppModel model, Widget w) {
+            return model.isAuthorized ? Todos() : LoginPage();
+          },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
