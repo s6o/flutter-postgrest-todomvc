@@ -20,13 +20,13 @@ class TodoMVC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter TodoMVC with PostgREST',
+      title: 'Flutter PostgREST TodoMVC',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Flutter TodoMVC with PostgREST'),
+          title: Text('Flutter PostgREST TodoMVC'),
         ),
         body: Consumer<AppModel>(
           builder: (BuildContext ctx, AppModel model, Widget w) {
