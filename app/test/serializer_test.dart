@@ -15,7 +15,7 @@ void main() {
     setUp(() {});
 
     test('- to JSON', () {
-      final json = toJson(defaultTodo);
+      final json = toJson<Todo>(defaultTodo);
       expect(
           json,
           equals(
@@ -23,7 +23,7 @@ void main() {
     });
 
     test('- from JSON', () {
-      final t = fromJson(dbTodoJson);
+      final t = fromJson<Todo>(dbTodoJson);
       expect(t.id, equals(1));
       expect(t.task, equals("Buy milk"));
       expect(t.done, equals(true));

@@ -1,12 +1,11 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:todomvc/models/todo.dart';
 
-String toJson(Todo t) {
+String toJson<T>(T t) {
   return JsonMapper.serialize(
       t, SerializationOptions(caseStyle: CaseStyle.Snake));
 }
 
-Todo fromJson(String json) {
-  return JsonMapper.deserialize<Todo>(
+T fromJson<T>(String json) {
+  return JsonMapper.deserialize<T>(
       json, DeserializationOptions(caseStyle: CaseStyle.Camel));
 }
