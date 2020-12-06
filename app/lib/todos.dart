@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todomvc/models/app_model.dart';
 
 class Todos extends StatelessWidget {
-  Todos();
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Here be todos ...'),
+    return Container(
+      child: Consumer<AppModel>(
+        builder: (BuildContext ctx, AppModel model, Widget _) {
+          return ListView.builder(
+            itemCount: model.todos.length,
+            itemBuilder: (BuildContext ctx, int index) {
+              return ListTile(
+                leading: Checkbox(
+                  value: model.todos[index].done,
+                  onChanged: (b) {
+                    print('${model.todos[index].task} - $b');
+                    model.toggle(index);
+                  },
+                ),
+                title: Text(model.todos[index].task),
+                subtitle:
+                    Text('Due: ${model.todos[index].due.toLocal().toString()}'),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

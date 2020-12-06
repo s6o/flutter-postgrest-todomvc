@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:todomvc/models/auth.dart';
 import 'package:todomvc/models/todo.dart';
 
 import 'package:todomvc/serializer.dart';
@@ -6,6 +7,32 @@ import 'serializer_test.mapper.g.dart' show initializeJsonMapper;
 
 void main() {
   initializeJsonMapper();
+
+  group('Jwt serialization/deserialization', () {
+    final jwt = Jwt(
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTYwNzI1MTE2MH0.-87h32BxcaC0N8MhFA2fpPJYpZsEkr2oybgrQGVha6I');
+    final jwtJson =
+        '{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTYwNzI1MTE2MH0.-87h32BxcaC0N8MhFA2fpPJYpZsEkr2oybgrQGVha6I"}';
+
+    setUp(() {});
+
+    test('- to JSON', () {
+      final json = toJson<Jwt>(jwt);
+      expect(
+          json,
+          equals(
+              '{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTYwNzI1MTE2MH0.-87h32BxcaC0N8MhFA2fpPJYpZsEkr2oybgrQGVha6I"}'));
+    });
+
+    test('- from JSON', () {
+      final j = fromJson<Jwt>(jwtJson);
+      expect(
+          j.token,
+          equals(
+              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTYwNzI1MTE2MH0.-87h32BxcaC0N8MhFA2fpPJYpZsEkr2oybgrQGVha6I'));
+    });
+  });
+
   group('Todo serialization/deserialization', () {
     final defaultDeadline = Todo.dueDefault();
     final defaultTodo = Todo(task: 'Buy milk', due: defaultDeadline);

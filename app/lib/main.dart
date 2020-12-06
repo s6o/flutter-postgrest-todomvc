@@ -29,8 +29,29 @@ class TodoMVC extends StatelessWidget {
           title: Text('Flutter PostgREST TodoMVC'),
         ),
         body: Consumer<AppModel>(
+          builder: (BuildContext ctx, AppModel model, Widget _) =>
+              model.isAuthorized ? Todos() : LoginPage(),
+        ),
+        drawer: Consumer<AppModel>(
           builder: (BuildContext ctx, AppModel model, Widget w) {
-            return model.isAuthorized ? Todos() : LoginPage();
+            return Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerHeader(
+                    child: Text('TodoMVC'),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                  ),
+                  if (model.isAuthorized)
+                    ListTile(
+                      title: Text('Logout'),
+                      onTap: () => model.unAuthorize(),
+                    ),
+                ],
+              ),
+            );
           },
         ),
       ),
