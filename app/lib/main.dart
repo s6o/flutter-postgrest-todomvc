@@ -44,11 +44,7 @@ class TodoMVC extends StatelessWidget {
                       color: Colors.blue,
                     ),
                   ),
-                  if (model.isAuthorized)
-                    ListTile(
-                      title: Text('Logout'),
-                      onTap: () => model.unAuthorize(),
-                    ),
+                  if (model.isAuthorized) ..._authorizedItems(context, model),
                 ],
               ),
             );
@@ -56,5 +52,41 @@ class TodoMVC extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _authorizedItems(BuildContext context, AppModel model) {
+    return <Widget>[
+      ListTile(
+          title: Text('Logout'),
+          onTap: () {
+            model.unAuthorize();
+            Navigator.pop(context);
+          }),
+      Divider(),
+      SwitchListTile(
+          title: Text('All'),
+          value: model.hasFilter(TodoFilter.All),
+          onChanged: (bool b) {
+            model.setFilter(b ? TodoFilter.All : TodoFilter.Active);
+            Navigator.pop(context);
+          }),
+      SwitchListTile(
+        title: Text('Active'),
+        value: model.hasFilter(TodoFilter.Active),
+        onChanged: (bool b) =>
+            model.setFilter(b ? TodoFilter.Active : TodoFilter.Completed),
+      ),
+      SwitchListTile(
+        title: Text('Completed'),
+        value: model.hasFilter(TodoFilter.Completed),
+        onChanged: (bool b) =>
+            model.setFilter(b ? TodoFilter.Completed : TodoFilter.All),
+      ),
+      Divider(),
+      ListTile(
+        title: Text('New'),
+        onTap: () {},
+      ),
+    ];
   }
 }

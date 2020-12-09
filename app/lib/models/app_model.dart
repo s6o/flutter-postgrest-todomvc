@@ -47,7 +47,9 @@ class AppModel extends ChangeNotifier {
   }
 
   void setFilter(TodoFilter tf) {
-    _filters.map((key, value) => MapEntry(key, false)).update(tf, (_) => true);
+    _filters = _filters.map((key, value) => MapEntry(key, false));
+    _filters.update(tf, (_) => true);
+    notifyListeners();
   }
 
   List<Todo> get todos {
