@@ -5,8 +5,8 @@ import 'package:todomvc/models/todo.dart';
 import 'package:todomvc/serializer.dart';
 
 class Api {
-  static bool _isApp = false;
-  static String _baseUrlApp = 'https://a6ff7014bcae.ngrok.io';
+  static bool _isApp = true;
+  static String _baseUrlApp = 'https://466f6471e5cc.ngrok.io';
   static String _baseUrlWeb = 'http://localhost:3000';
   static String _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
 
