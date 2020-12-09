@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todomvc/api.dart';
 import 'package:todomvc/models/app_model.dart';
 
 class Todos extends StatelessWidget {
@@ -17,6 +18,8 @@ class Todos extends StatelessWidget {
                   onChanged: (b) {
                     print('${model.todos[index].task} - $b');
                     model.toggle(index);
+                    Api.toggle(model.jwt, model.todos[index])
+                        .then((b) => print('Toggle synced: $b'));
                   },
                 ),
                 title: Text(model.todos[index].task),
