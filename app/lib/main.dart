@@ -16,7 +16,13 @@ void main() {
   );
 }
 
-class TodoMVC extends StatelessWidget {
+class TodoMVC extends StatefulWidget {
+  @override
+  _TodoMVCState createState() => _TodoMVCState();
+}
+
+class _TodoMVCState extends State<TodoMVC> {
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,6 +31,7 @@ class TodoMVC extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text('Flutter PostgREST TodoMVC'),
         ),
@@ -60,7 +67,7 @@ class TodoMVC extends StatelessWidget {
           title: Text('Logout'),
           onTap: () {
             model.unAuthorize();
-            Navigator.pop(context);
+            _scaffoldKey.currentState.openEndDrawer();
           }),
       Divider(),
       SwitchListTile(
@@ -68,20 +75,22 @@ class TodoMVC extends StatelessWidget {
           value: model.hasFilter(TodoFilter.All),
           onChanged: (bool b) {
             model.setFilter(b ? TodoFilter.All : TodoFilter.Active);
-            Navigator.pop(context);
+            _scaffoldKey.currentState.openEndDrawer();
           }),
       SwitchListTile(
-        title: Text('Active'),
-        value: model.hasFilter(TodoFilter.Active),
-        onChanged: (bool b) =>
-            model.setFilter(b ? TodoFilter.Active : TodoFilter.Completed),
-      ),
+          title: Text('Active'),
+          value: model.hasFilter(TodoFilter.Active),
+          onChanged: (bool b) {
+            model.setFilter(b ? TodoFilter.Active : TodoFilter.Completed);
+            _scaffoldKey.currentState.openEndDrawer();
+          }),
       SwitchListTile(
-        title: Text('Completed'),
-        value: model.hasFilter(TodoFilter.Completed),
-        onChanged: (bool b) =>
-            model.setFilter(b ? TodoFilter.Completed : TodoFilter.All),
-      ),
+          title: Text('Completed'),
+          value: model.hasFilter(TodoFilter.Completed),
+          onChanged: (bool b) {
+            model.setFilter(b ? TodoFilter.Completed : TodoFilter.All);
+            _scaffoldKey.currentState.openEndDrawer();
+          }),
       Divider(),
       ListTile(
         title: Text('New'),
