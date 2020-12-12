@@ -6,7 +6,7 @@ import 'package:todomvc/serializer.dart';
 
 class Api {
   static bool _isApp = true;
-  static String _baseUrlApp = 'https://466f6471e5cc.ngrok.io';
+  static String _baseUrlApp = 'https://a59860e9a6ff.ngrok.io';
   static String _baseUrlWeb = 'http://localhost:3000';
   static String _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
 

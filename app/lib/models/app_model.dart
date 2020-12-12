@@ -13,6 +13,7 @@ class AppModel extends ChangeNotifier {
   Jwt _jwt;
   List<Todo> _todos;
   Map<TodoFilter, bool> _filters;
+  String _filterTitle;
 
   AppModel()
       : _credentials = Credentials(),
@@ -22,10 +23,15 @@ class AppModel extends ChangeNotifier {
           TodoFilter.Active: false,
           TodoFilter.Completed: false,
         },
+        _filterTitle = '',
         _todos = [];
 
   Credentials get credentials {
     return _credentials;
+  }
+
+  String get filterTitle {
+    return _filterTitle;
   }
 
   bool hasFilter(TodoFilter tf) {
@@ -49,6 +55,17 @@ class AppModel extends ChangeNotifier {
   void setFilter(TodoFilter tf) {
     _filters = _filters.map((key, value) => MapEntry(key, false));
     _filters.update(tf, (_) => true);
+    switch (tf) {
+      case TodoFilter.Active:
+        _filterTitle = '(active)';
+        break;
+      case TodoFilter.Completed:
+        _filterTitle = '(completed)';
+        break;
+      case TodoFilter.All:
+      default:
+        _filterTitle = '';
+    }
     notifyListeners();
   }
 

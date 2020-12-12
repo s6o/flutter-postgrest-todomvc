@@ -26,14 +26,18 @@ class _TodoMVCState extends State<TodoMVC> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter PostgREST TodoMVC',
+      title: 'TodoMVC',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text('Flutter PostgREST TodoMVC'),
+          title: Consumer<AppModel>(
+            builder: (BuildContext ctx, AppModel model, Widget w) {
+              return Text('Todos ${model.filterTitle}');
+            },
+          ),
         ),
         body: Consumer<AppModel>(
           builder: (BuildContext ctx, AppModel model, Widget _) =>
