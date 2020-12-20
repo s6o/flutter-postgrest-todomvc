@@ -17,9 +17,10 @@ class Todos extends StatelessWidget {
                   value: model.todos[index].done,
                   onChanged: (b) {
                     print('${model.todos[index].task} - $b');
-                    model.toggle(index);
-                    Api.toggle(model.jwt, model.todos[index])
-                        .then((b) => print('Toggle synced: $b'));
+                    Api.toggle(model.jwt, model.todos[index]).then((b) {
+                      model.toggle(index);
+                      print('Toggle synced: $b');
+                    });
                   },
                 ),
                 title: Text(model.todos[index].task),
