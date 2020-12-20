@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todomvc/login.dart';
 import 'package:todomvc/models/app_model.dart';
+import 'package:todomvc/todo_details.dart';
 import 'package:todomvc/todos.dart';
 
 import 'main.mapper.g.dart' show initializeJsonMapper;
@@ -98,7 +99,10 @@ class _TodoMVCState extends State<TodoMVC> {
       Divider(),
       ListTile(
         title: Text('New'),
-        onTap: () {},
+        onTap: () {
+          _scaffoldKey.currentState.openEndDrawer();
+          _scaffoldKey.currentState.showBottomSheet((context) => TodoDetails());
+        },
       ),
     ];
   }

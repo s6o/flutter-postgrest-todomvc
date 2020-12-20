@@ -26,6 +26,27 @@ class Api {
             : Future.error(fromJson<Error>(r.body)));
   }
 
+  static Future<Todo> newTodo(Todo t) {
+    if (t.token == null || t.token.isEmpty) {
+      return Future.error(Error().message = 'New Todo requires token.');
+    }
+    Error();
+    return http
+        .post(
+          '$_baseUrl/rpc/user_new_todo',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${t.token}',
+            'Prefer': 'params=single-object',
+            'Accept': 'application/vnd.pgrst.object+json'
+          },
+          body: toJson<Todo>(t),
+        )
+        .then((http.Response r) => r.statusCode == 200
+            ? fromJson<Todo>(r.body)
+            : Future.error(fromJson<Error>(r.body)));
+  }
+
   static Future<List<Todo>> todos(Jwt jwt) {
     return http
         .post(

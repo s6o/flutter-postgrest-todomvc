@@ -14,6 +14,7 @@ class AppModel extends ChangeNotifier {
   List<Todo> _todos;
   Map<TodoFilter, bool> _filters;
   String _filterTitle;
+  Todo newTodo;
 
   AppModel()
       : _credentials = Credentials(),
@@ -24,7 +25,14 @@ class AppModel extends ChangeNotifier {
           TodoFilter.Completed: false,
         },
         _filterTitle = '',
-        _todos = [];
+        _todos = [],
+        newTodo = Todo(task: 'A new todo');
+
+  void appendTodo(Todo t) {
+    newTodo = Todo(task: 'A new todo.');
+    _todos.add(t);
+    notifyListeners();
+  }
 
   Credentials get credentials {
     return _credentials;
