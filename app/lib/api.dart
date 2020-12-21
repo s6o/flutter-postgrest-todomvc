@@ -84,4 +84,19 @@ class Api {
             body: '\{"done":${!t.done}\}')
         .then((http.Response r) => r.statusCode == 204 ? true : false);
   }
+
+  static Future<Todo> updateTodo(Todo t) {
+    if (t.token == null || t.token.isEmpty) {
+      return Future.error(Error().message = 'Todo update requires token.');
+    }
+    return http
+        .patch('$_baseUrl/todos?id=eq.${t.id}',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ${t.token}',
+            },
+            body: toJson<Todo>(t.token = null))
+        .then((http.Response r) =>
+            r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body)));
+  }
 }

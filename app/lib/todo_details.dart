@@ -34,6 +34,7 @@ class _TodoDetailsState extends State<TodoDetails> {
                 TextFormField(
                   autocorrect: false,
                   decoration: InputDecoration(labelText: 'Task'),
+                  initialValue: model.newTodo.task,
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.none,
                   validator: (v) => v.isEmpty ? 'Task is required' : null,
@@ -44,6 +45,9 @@ class _TodoDetailsState extends State<TodoDetails> {
                   autocorrect: false,
                   decoration:
                       InputDecoration(labelText: 'Due (YYYY-MM-DD HH24:MI:SS)'),
+                  initialValue: model.newTodo.id != null && model.newTodo.id > 0
+                      ? model.newTodo.due.toString()
+                      : '',
                   keyboardType: TextInputType.datetime,
                   textCapitalization: TextCapitalization.none,
                   validator: (v) => v.isNotEmpty && DateTime.tryParse(v) == null
@@ -60,6 +64,7 @@ class _TodoDetailsState extends State<TodoDetails> {
                   children: [
                     RaisedButton(
                       onPressed: () {
+                        model.newTodo = Todo(task: '');
                         Navigator.pop(context);
                       },
                       child: Text('Cancel'),
@@ -68,16 +73,30 @@ class _TodoDetailsState extends State<TodoDetails> {
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          // ignore: deprecated_member_use
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text('Sending new todo ...')));
-
                           try {
                             model.newTodo.token = model.jwt.token;
-                            await Api.newTodo(model.newTodo).then((Todo t) {
-                              model.appendTodo(t);
-                              Navigator.pop(context);
-                            });
+                            if (model.newTodo.id != null &&
+                                model.newTodo.id > 0) {
+                              // ignore: deprecated_member_use
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text('Sending updated todo ...')));
+                              await Api.updateTodo(model.newTodo)
+                                  .then((Todo t) {
+                                model.updateTodo(t);
+                                model.newTodo = Todo(task: '');
+                                Navigator.pop(context);
+                              });
+                            } else {
+                              // ignore: deprecated_member_use
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text('Sending new todo ...')));
+
+                              await Api.newTodo(model.newTodo).then((Todo t) {
+                                model.appendTodo(t);
+                                model.newTodo = Todo(task: '');
+                                Navigator.pop(context);
+                              });
+                            }
                           } catch (e) {
                             // ignore: deprecated_member_use
                             Scaffold.of(context).showSnackBar(

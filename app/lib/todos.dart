@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todomvc/api.dart';
 import 'package:todomvc/models/app_model.dart';
 import 'package:todomvc/models/todo.dart';
+import 'package:todomvc/todo_details.dart';
 
 class Todos extends StatelessWidget {
   @override
@@ -32,6 +33,11 @@ class Todos extends StatelessWidget {
                   },
                 ),
                 title: Text(model.todos[index].task),
+                onTap: () {
+                  model.newTodo = model.todos[index];
+                  Scaffold.of(context)
+                      .showBottomSheet((context) => TodoDetails());
+                },
                 subtitle:
                     Text('Due: ${model.todos[index].due.toLocal().toString()}'),
               );

@@ -26,10 +26,10 @@ class AppModel extends ChangeNotifier {
         },
         _filterTitle = '',
         _todos = [],
-        newTodo = Todo(task: 'A new todo');
+        newTodo = Todo(task: '');
 
   void appendTodo(Todo t) {
-    newTodo = Todo(task: 'A new todo.');
+    newTodo = Todo(task: '');
     _todos.add(t);
     notifyListeners();
   }
@@ -108,6 +108,12 @@ class AppModel extends ChangeNotifier {
 
   void unAuthorize() {
     _jwt = null;
+    notifyListeners();
+  }
+
+  void updateTodo(Todo t) {
+    int index = _todos.indexWhere((Todo todo) => todo.id == t.id);
+    _todos[index] = t;
     notifyListeners();
   }
 }
