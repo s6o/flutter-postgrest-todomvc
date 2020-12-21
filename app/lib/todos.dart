@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todomvc/api.dart';
 import 'package:todomvc/models/app_model.dart';
+import 'package:todomvc/models/todo.dart';
 
 class Todos extends StatelessWidget {
   @override
@@ -21,6 +22,13 @@ class Todos extends StatelessWidget {
                       model.toggle(index);
                       print('Toggle synced: $b');
                     });
+                  },
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete_forever),
+                  onPressed: () {
+                    Api.deleteTodo(model.jwt, model.todos[index])
+                        .then((Todo t) => model.deleteTodo(t));
                   },
                 ),
                 title: Text(model.todos[index].task),

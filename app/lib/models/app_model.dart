@@ -34,6 +34,12 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteTodo(Todo t) {
+    int index = _todos.indexWhere((Todo todo) => todo.id == t.id);
+    _todos.removeAt(index);
+    notifyListeners();
+  }
+
   Credentials get credentials {
     return _credentials;
   }

@@ -10,6 +10,17 @@ class Api {
   static String _baseUrlWeb = 'http://localhost:3000';
   static String _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
 
+  static Future<Todo> deleteTodo(Jwt jwt, Todo t) {
+    return http.delete(
+      '$_baseUrl/todos?id=eq.${t.id}',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jwt.token}',
+      },
+    ).then((http.Response r) =>
+        r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body)));
+  }
+
   static Future<Jwt> login(Credentials credentials) {
     return http
         .post(
