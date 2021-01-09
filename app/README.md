@@ -7,7 +7,17 @@ the backend database.
 
 * Flutter - beta channel, for Flutter Web
 
+## Run Web
+
+The app defaults to Flutter Web.
+
+```bash
+flutter run -d chrome
+```
+
 ## Testing Android, iOS with ngrok
+
+For Andorid, iOS testing the _isApp flag needs to flipped in lib/api.dart.
 
 To test the mobile app, postgrest has to be configured to run on a local network
 instead of the default localhost:3000.
@@ -22,11 +32,3 @@ ngrok http 3000
 ```
 
 Paste ngrok address into lib/api.dart's variable _baseUrlApp.
-
-## Run Web
-
-Currently web version is broken, by not displaying the todo list.
-
-```bash
-flutter run -d chrome
-```
