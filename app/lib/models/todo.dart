@@ -17,6 +17,13 @@ class Todo {
         this.doneAt = done ? DateTime.now().toUtc() : null,
         super();
 
+  Todo.fromMap(Map<String, dynamic> m)
+      : id = m['id'] ?? null,
+        task = m['task'],
+        due = DateTime.tryParse(m['due']),
+        done = m['done'] ?? false,
+        doneAt = m['done_at'] == null ? null : DateTime.tryParse(m['done_at']);
+
   static DateTime dueDefault() {
     return DateTime.now().toUtc().add(Duration(days: 1));
   }
