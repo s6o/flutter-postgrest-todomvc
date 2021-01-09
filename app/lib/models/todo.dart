@@ -21,3 +21,12 @@ class Todo {
     return DateTime.now().toUtc().add(Duration(days: 1));
   }
 }
+
+@jsonSerializable
+class UserTodo extends Todo {
+  String token;
+
+  UserTodo(this.token, Todo t)
+      : super(
+            task: t.task, due: t.due, done: t.done, id: t.id, doneAt: t.doneAt);
+}

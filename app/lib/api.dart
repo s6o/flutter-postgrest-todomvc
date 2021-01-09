@@ -51,7 +51,7 @@ class Api {
             'Prefer': 'params=single-object',
             'Accept': 'application/vnd.pgrst.object+json'
           },
-          body: toJson<Todo>(t),
+          body: toJson<UserTodo>(UserTodo(jwt.token, t)),
         )
         .then((http.Response r) => r.statusCode == 200
             ? fromJson<Todo>(r.body)

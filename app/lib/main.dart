@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:todomvc/login.dart';
 import 'package:todomvc/models/app_model.dart';
 import 'package:todomvc/todo_details.dart';
 import 'package:todomvc/todos.dart';
+import 'package:todomvc/models/todo.dart';
 
 import 'main.mapper.g.dart' show initializeJsonMapper;
 
 void main() {
   initializeJsonMapper();
+  JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
+    typeOf<List<Todo>>(): (value) => value.cast<Todo>(),
+  }));
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppModel(),
