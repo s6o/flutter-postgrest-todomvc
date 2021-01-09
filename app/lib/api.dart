@@ -37,8 +37,8 @@ class Api {
             : Future.error(fromJson<Error>(r.body)));
   }
 
-  static Future<Todo> newTodo(Todo t) {
-    if (t.token == null || t.token.isEmpty) {
+  static Future<Todo> newTodo(Jwt jwt, Todo t) {
+    if (jwt.token == null || jwt.token.isEmpty) {
       return Future.error(Error().message = 'New Todo requires token.');
     }
     Error();
@@ -47,7 +47,7 @@ class Api {
           '$_baseUrl/rpc/user_new_todo',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${t.token}',
+            'Authorization': 'Bearer ${jwt.token}',
             'Prefer': 'params=single-object',
             'Accept': 'application/vnd.pgrst.object+json'
           },
@@ -85,17 +85,17 @@ class Api {
         .then((http.Response r) => r.statusCode == 204 ? true : false);
   }
 
-  static Future<Todo> updateTodo(Todo t) {
-    if (t.token == null || t.token.isEmpty) {
+  static Future<Todo> updateTodo(Jwt jwt, Todo t) {
+    if (jwt.token == null || jwt.token.isEmpty) {
       return Future.error(Error().message = 'Todo update requires token.');
     }
     return http
         .patch('$_baseUrl/todos?id=eq.${t.id}',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer ${t.token}',
+              'Authorization': 'Bearer ${jwt.token}',
             },
-            body: toJson<Todo>(t.token = null))
+            body: toJson<Todo>(t))
         .then((http.Response r) =>
             r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body)));
   }

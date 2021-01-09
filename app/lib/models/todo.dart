@@ -12,16 +12,7 @@ class Todo {
   bool done;
   DateTime doneAt;
 
-  @JsonProperty(ignoreIfNull: true)
-  String token;
-
-  Todo(
-      {@required this.task,
-      due,
-      this.done = false,
-      this.token,
-      this.id,
-      doneAt})
+  Todo({@required this.task, due, this.done = false, this.id, doneAt})
       : this.due = due ?? dueDefault(),
         this.doneAt = done ? DateTime.now().toUtc() : null,
         super();

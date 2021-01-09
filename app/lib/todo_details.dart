@@ -74,13 +74,12 @@ class _TodoDetailsState extends State<TodoDetails> {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           try {
-                            model.newTodo.token = model.jwt.token;
                             if (model.newTodo.id != null &&
                                 model.newTodo.id > 0) {
                               // ignore: deprecated_member_use
                               Scaffold.of(context).showSnackBar(SnackBar(
                                   content: Text('Sending updated todo ...')));
-                              await Api.updateTodo(model.newTodo)
+                              await Api.updateTodo(model.jwt, model.newTodo)
                                   .then((Todo t) {
                                 model.updateTodo(t);
                                 model.newTodo = Todo(task: '');
@@ -91,7 +90,8 @@ class _TodoDetailsState extends State<TodoDetails> {
                               Scaffold.of(context).showSnackBar(SnackBar(
                                   content: Text('Sending new todo ...')));
 
-                              await Api.newTodo(model.newTodo).then((Todo t) {
+                              await Api.newTodo(model.jwt, model.newTodo)
+                                  .then((Todo t) {
                                 model.appendTodo(t);
                                 model.newTodo = Todo(task: '');
                                 Navigator.pop(context);
