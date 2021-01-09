@@ -8,11 +8,13 @@ DROP FUNCTION IF EXISTS app_api.user_new_todo;
 
 CREATE FUNCTION app_api.user_new_todo(user_todo json)
 RETURNS table(id INTEGER, task TEXT, due TEXT, done BOOLEAN, done_at TEXT) LANGUAGE sql AS $$
-INSERT INTO app_api.todos (user_id, task, due)
+INSERT INTO app_api.todos (user_id, task, due, done, done_at)
   SELECT
     (verified.payload->>'uid')::int
   , (user_todo->>'task')::text
   , coalesce((user_todo->>'due')::timestamp, current_timestamp + '1 day'::interval)
+  , coalesce((user_todo->>'done')::boolean, false)
+  , coalesce((user_todo->>'done_at')::timestamp, null)
   FROM (
     SELECT * FROM app_auth.verify(user_todo->>'token', current_setting('app.jwt_secret'))
   ) AS verified
