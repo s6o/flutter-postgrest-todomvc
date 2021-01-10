@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:todomvc/models/auth.dart';
-import 'package:todomvc/models/error.dart';
+import 'package:todomvc/models/app_error.dart';
 import 'package:todomvc/models/todo.dart';
 import 'package:todomvc/serializer.dart';
 
@@ -22,9 +22,9 @@ class Api {
           'Authorization': 'Bearer ${jwt.token}',
         },
       );
-      return r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body));
+      return r.statusCode == 204 ? t : Future.error(fromJson<AppError>(r.body));
     } catch (e) {
-      return Future.error(Error(e.toString()));
+      return Future.error(AppError(e.toString()));
     }
   }
 
@@ -41,16 +41,16 @@ class Api {
       );
       return r.statusCode == 200
           ? fromJson<Jwt>(r.body)
-          : Future.error(fromJson<Error>(r.body));
+          : Future.error(fromJson<AppError>(r.body));
     } catch (e) {
-      return Future.error(Error(e.toString()));
+      return Future.error(AppError(e.toString()));
     }
   }
 
   static Future<Todo> newTodo(Jwt jwt, Todo t) async {
     try {
       if (jwt.token == null || jwt.token.isEmpty) {
-        return Future.error(Error('New Todo requires token.'));
+        return Future.error(AppError('New Todo requires token.'));
       }
       http.Response r = await http.post(
         '$_baseUrl/rpc/user_new_todo',
@@ -66,9 +66,9 @@ class Api {
           ? kIsWeb
               ? Todo.fromMap(jsonDecode(r.body))
               : fromJson<Todo>(r.body)
-          : Future.error(fromJson<Error>(r.body));
+          : Future.error(fromJson<AppError>(r.body));
     } catch (e) {
-      return Future.error(Error(e.toString()));
+      return Future.error(AppError(e.toString()));
     }
   }
 
@@ -91,10 +91,10 @@ class Api {
           return fromJson<List<Todo>>(r.body);
         }
       } else {
-        return Future.error(fromJson<Error>(r.body));
+        return Future.error(fromJson<AppError>(r.body));
       }
     } catch (e) {
-      return Future.error(Error(e.toString()));
+      return Future.error(AppError(e.toString()));
     }
   }
 
@@ -108,14 +108,14 @@ class Api {
           body: '\{"done":${!t.done}\}');
       return r.statusCode == 204 ? true : false;
     } catch (e) {
-      return Future.error(Error(e.toString()));
+      return Future.error(AppError(e.toString()));
     }
   }
 
   static Future<Todo> updateTodo(Jwt jwt, Todo t) async {
     try {
       if (jwt.token == null || jwt.token.isEmpty) {
-        return Future.error(Error('Todo update requires token.'));
+        return Future.error(AppError('Todo update requires token.'));
       }
       http.Response r = await http.patch('$_baseUrl/todos?id=eq.${t.id}',
           headers: {
@@ -123,9 +123,9 @@ class Api {
             'Authorization': 'Bearer ${jwt.token}',
           },
           body: toJson<Todo>(t));
-      return r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body));
+      return r.statusCode == 204 ? t : Future.error(fromJson<AppError>(r.body));
     } catch (e) {
-      return Future.error(Error(e.toString()));
+      return Future.error(AppError(e.toString()));
     }
   }
 }

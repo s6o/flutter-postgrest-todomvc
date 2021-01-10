@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todomvc/api.dart';
 import 'package:todomvc/models/app_model.dart';
 import 'package:todomvc/models/auth.dart';
-import 'package:todomvc/models/error.dart';
+import 'package:todomvc/models/app_error.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                       } catch (e) {
                         // ignore: deprecated_member_use
                         Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text((e as Error).message)));
+                            SnackBar(content: Text((e as AppError).message)));
                       }
                     }
                   },

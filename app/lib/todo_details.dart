@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todomvc/api.dart';
 import 'package:todomvc/models/app_model.dart';
-import 'package:todomvc/models/error.dart';
+import 'package:todomvc/models/app_error.dart';
 import 'package:todomvc/models/todo.dart';
 
 class TodoDetails extends StatefulWidget {
@@ -99,8 +99,8 @@ class _TodoDetailsState extends State<TodoDetails> {
                             }
                           } catch (e) {
                             // ignore: deprecated_member_use
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text((e as Error).message)));
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text((e as AppError).message)));
                           }
                         }
                       },

@@ -1,7 +1,7 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 @jsonSerializable
-class Error {
+class AppError {
   String message;
-  Error(this.message);
+  AppError(this.message);
 }
