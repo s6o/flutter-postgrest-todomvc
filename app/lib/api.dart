@@ -13,67 +13,76 @@ class Api {
   static String _baseUrlWeb = 'http://localhost:3000';
   static String _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
 
-  static Future<Todo> deleteTodo(Jwt jwt, Todo t) {
-    return http.delete(
-      '$_baseUrl/todos?id=eq.${t.id}',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt.token}',
-      },
-    ).then((http.Response r) =>
-        r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body)));
-  }
-
-  static Future<Jwt> login(Credentials credentials) {
-    return http
-        .post(
-          '$_baseUrl/rpc/login',
-          headers: {
-            'Content-Type': 'application/json',
-            'Content-Profile': 'app_auth',
-            'Accept': 'application/vnd.pgrst.object+json'
-          },
-          body: toJson<Credentials>(credentials),
-        )
-        .then((http.Response r) => r.statusCode == 200
-            ? fromJson<Jwt>(r.body)
-            : Future.error(fromJson<Error>(r.body)));
-  }
-
-  static Future<Todo> newTodo(Jwt jwt, Todo t) {
-    if (jwt.token == null || jwt.token.isEmpty) {
-      return Future.error(Error().message = 'New Todo requires token.');
+  static Future<Todo> deleteTodo(Jwt jwt, Todo t) async {
+    try {
+      http.Response r = await http.delete(
+        '$_baseUrl/todos?id=eq.${t.id}',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${jwt.token}',
+        },
+      );
+      return r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body));
+    } catch (e) {
+      return Future.error(Error(e.toString()));
     }
-    return http
-        .post(
-          '$_baseUrl/rpc/user_new_todo',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${jwt.token}',
-            'Prefer': 'params=single-object',
-            'Accept': 'application/vnd.pgrst.object+json'
-          },
-          body: toJson<UserTodo>(UserTodo(jwt.token, t)),
-        )
-        .then((http.Response r) => r.statusCode == 200
-            ? kIsWeb
-                ? Todo.fromMap(jsonDecode(r.body))
-                : fromJson<Todo>(r.body)
-            : Future.error(fromJson<Error>(r.body)));
   }
 
-  static Future<List<Todo>> todos(Jwt jwt) {
-    return http
-        .post(
-      '$_baseUrl/rpc/user_todos',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt.token}',
-        'Prefer': 'params=single-object'
-      },
-      body: toJson<Jwt>(jwt),
-    )
-        .then((http.Response r) {
+  static Future<Jwt> login(Credentials credentials) async {
+    try {
+      http.Response r = await http.post(
+        '$_baseUrl/rpc/login',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Profile': 'app_auth',
+          'Accept': 'application/vnd.pgrst.object+json'
+        },
+        body: toJson<Credentials>(credentials),
+      );
+      return r.statusCode == 200
+          ? fromJson<Jwt>(r.body)
+          : Future.error(fromJson<Error>(r.body));
+    } catch (e) {
+      return Future.error(Error(e.toString()));
+    }
+  }
+
+  static Future<Todo> newTodo(Jwt jwt, Todo t) async {
+    try {
+      if (jwt.token == null || jwt.token.isEmpty) {
+        return Future.error(Error('New Todo requires token.'));
+      }
+      http.Response r = await http.post(
+        '$_baseUrl/rpc/user_new_todo',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${jwt.token}',
+          'Prefer': 'params=single-object',
+          'Accept': 'application/vnd.pgrst.object+json'
+        },
+        body: toJson<UserTodo>(UserTodo(jwt.token, t)),
+      );
+      return r.statusCode == 200
+          ? kIsWeb
+              ? Todo.fromMap(jsonDecode(r.body))
+              : fromJson<Todo>(r.body)
+          : Future.error(fromJson<Error>(r.body));
+    } catch (e) {
+      return Future.error(Error(e.toString()));
+    }
+  }
+
+  static Future<List<Todo>> todos(Jwt jwt) async {
+    try {
+      http.Response r = await http.post(
+        '$_baseUrl/rpc/user_todos',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${jwt.token}',
+          'Prefer': 'params=single-object'
+        },
+        body: toJson<Jwt>(jwt),
+      );
       if (r.statusCode == 200) {
         if (kIsWeb) {
           List<dynamic> tmaps = jsonDecode(r.body);
@@ -84,32 +93,39 @@ class Api {
       } else {
         return Future.error(fromJson<Error>(r.body));
       }
-    });
-  }
-
-  static Future<bool> toggle(Jwt jwt, Todo t) {
-    return http
-        .patch('$_baseUrl/todos?id=eq.${t.id}',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ${jwt.token}',
-            },
-            body: '\{"done":${!t.done}\}')
-        .then((http.Response r) => r.statusCode == 204 ? true : false);
-  }
-
-  static Future<Todo> updateTodo(Jwt jwt, Todo t) {
-    if (jwt.token == null || jwt.token.isEmpty) {
-      return Future.error(Error().message = 'Todo update requires token.');
+    } catch (e) {
+      return Future.error(Error(e.toString()));
     }
-    return http
-        .patch('$_baseUrl/todos?id=eq.${t.id}',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ${jwt.token}',
-            },
-            body: toJson<Todo>(t))
-        .then((http.Response r) =>
-            r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body)));
+  }
+
+  static Future<bool> toggle(Jwt jwt, Todo t) async {
+    try {
+      http.Response r = await http.patch('$_baseUrl/todos?id=eq.${t.id}',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${jwt.token}',
+          },
+          body: '\{"done":${!t.done}\}');
+      return r.statusCode == 204 ? true : false;
+    } catch (e) {
+      return Future.error(Error(e.toString()));
+    }
+  }
+
+  static Future<Todo> updateTodo(Jwt jwt, Todo t) async {
+    try {
+      if (jwt.token == null || jwt.token.isEmpty) {
+        return Future.error(Error('Todo update requires token.'));
+      }
+      http.Response r = await http.patch('$_baseUrl/todos?id=eq.${t.id}',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${jwt.token}',
+          },
+          body: toJson<Todo>(t));
+      return r.statusCode == 204 ? t : Future.error(fromJson<Error>(r.body));
+    } catch (e) {
+      return Future.error(Error(e.toString()));
+    }
   }
 }
