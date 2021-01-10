@@ -56,7 +56,9 @@ class Api {
           body: toJson<UserTodo>(UserTodo(jwt.token, t)),
         )
         .then((http.Response r) => r.statusCode == 200
-            ? fromJson<Todo>(r.body)
+            ? kIsWeb
+                ? Todo.fromMap(jsonDecode(r.body))
+                : fromJson<Todo>(r.body)
             : Future.error(fromJson<Error>(r.body)));
   }
 
