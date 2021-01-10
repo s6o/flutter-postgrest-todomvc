@@ -47,12 +47,15 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
-                      // ignore: deprecated_member_use
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Sending credentials ...')));
-
                       try {
+                        // ignore: deprecated_member_use
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text('Sending credentials ...')));
                         Jwt jwt = await Api.login(model.credentials);
+
+                        // ignore: deprecated_member_use
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text('Fetching todos ...')));
                         model.todos = await Api.todos(jwt);
                         model.jwt = jwt;
                       } catch (e) {
