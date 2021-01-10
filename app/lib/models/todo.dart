@@ -4,25 +4,31 @@ import 'package:dart_json_mapper/dart_json_mapper.dart'
 
 @jsonSerializable
 class Todo {
-  @JsonProperty(ignoreIfNull: true)
-  int id;
-
   String task;
   DateTime due;
   bool done;
   DateTime doneAt;
 
-  Todo({@required this.task, due, this.done = false, this.id, doneAt})
+  @JsonProperty(ignoreIfNull: true)
+  int id;
+
+  Todo({@required this.task, due, this.done = false, doneAt, this.id})
       : this.due = due ?? dueDefault(),
-        this.doneAt = done ? DateTime.now().toUtc() : null,
+        this.doneAt = done ? (doneAt ?? DateTime.now().toUtc()) : doneAt,
         super();
 
   Todo.fromMap(Map<String, dynamic> m)
-      : id = m['id'] ?? null,
-        task = m['task'],
+      : task = m['task'],
         due = DateTime.tryParse(m['due']),
         done = m['done'] ?? false,
-        doneAt = m['done_at'] == null ? null : DateTime.tryParse(m['done_at']);
+        doneAt = (m['done'] ?? false)
+            ? m['done_at'] != null
+                ? DateTime.tryParse(m['done_at']) ?? DateTime.now().toUtc()
+                : DateTime.now().toUtc()
+            : m['done_at'] != null
+                ? DateTime.tryParse(m['done_at'])
+                : null,
+        id = m['id'] ?? null;
 
   static DateTime dueDefault() {
     return DateTime.now().toUtc().add(Duration(days: 1));
@@ -35,5 +41,5 @@ class UserTodo extends Todo {
 
   UserTodo(this.token, Todo t)
       : super(
-            task: t.task, due: t.due, done: t.done, id: t.id, doneAt: t.doneAt);
+            task: t.task, due: t.due, done: t.done, doneAt: t.doneAt, id: t.id);
 }
