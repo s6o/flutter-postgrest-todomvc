@@ -48,20 +48,19 @@ class _LoginPageState extends State<LoginPage> {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
                       try {
-                        // ignore: deprecated_member_use
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Sending credentials ...')));
+                        var ctrl = Scaffold.of(context).showBottomSheet(
+                            (context) => Text('Sending credentials ...'));
                         Jwt jwt = await Api.login(model.credentials);
+                        ctrl.close();
 
-                        // ignore: deprecated_member_use
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Fetching todos ...')));
+                        ctrl = Scaffold.of(context).showBottomSheet(
+                            (context) => Text('Fetching todos ...'));
                         model.todos = await Api.todos(jwt);
+                        ctrl.close();
                         model.jwt = jwt;
                       } catch (e) {
-                        // ignore: deprecated_member_use
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text((e as AppError).message)));
+                        Scaffold.of(context).showBottomSheet(
+                            (context) => Text((e as AppError).message));
                       }
                     }
                   },
