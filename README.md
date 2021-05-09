@@ -12,3 +12,9 @@ to the respective Postgres database table. A more realistic real world user regi
 process could utilize [Zapier and SendGrid](https://zapier.com/apps/postgresql/integrations/sendgrid)
 for user activation and notification via email.
 
+Alternatively, a custom event driven back-end with e.g. Node + [pg-listen](https://github.com/andywer/pg-listen)
+or [Elixir/Phoenix](https://www.phoenixframework.org/)
+could be added to control user registration, email notifications etc., where
+the event pipeline would utilize Postgres' [NOTIFY](https://www.postgresql.org/docs/13/sql-notify.html)
+and [LISTEN](https://www.postgresql.org/docs/13/sql-listen.html).
+
