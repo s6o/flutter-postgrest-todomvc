@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todomvc/models/app_error.dart';
 import 'package:todomvc/models/auth.dart';
 import 'package:todomvc/models/todo.dart';
 
@@ -9,6 +10,7 @@ enum TodoFilter {
 }
 
 class AppModel extends ChangeNotifier {
+  AppError _appError;
   Credentials _credentials;
   Jwt _jwt;
   List<Todo> _todos;
@@ -17,7 +19,8 @@ class AppModel extends ChangeNotifier {
   Todo newTodo;
 
   AppModel()
-      : _credentials = Credentials(),
+      : _appError = AppError.empty(),
+        _credentials = Credentials(),
         _jwt = null,
         _filters = {
           TodoFilter.All: true,
@@ -27,6 +30,15 @@ class AppModel extends ChangeNotifier {
         _filterTitle = '',
         _todos = [],
         newTodo = Todo(task: '');
+
+  AppError get appError {
+    return _appError;
+  }
+
+  void setAppError(String message) {
+    _appError = AppError(message);
+    notifyListeners();
+  }
 
   void appendTodo(Todo t) {
     newTodo = Todo(task: '');
