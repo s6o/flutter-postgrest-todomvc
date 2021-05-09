@@ -62,7 +62,7 @@ class _TodoDetailsState extends State<TodoDetails> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: () {
                         model.newTodo = Todo(task: '');
                         Navigator.pop(context);
@@ -76,9 +76,11 @@ class _TodoDetailsState extends State<TodoDetails> {
                           try {
                             if (model.newTodo.id != null &&
                                 model.newTodo.id > 0) {
-                              // ignore: deprecated_member_use
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('Sending updated todo ...')));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Sending updated todo ...'),
+                                ),
+                              );
                               await Api.updateTodo(model.jwt, model.newTodo)
                                   .then((Todo t) {
                                 model.updateTodo(t);
@@ -86,9 +88,11 @@ class _TodoDetailsState extends State<TodoDetails> {
                                 Navigator.pop(context);
                               });
                             } else {
-                              // ignore: deprecated_member_use
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('Sending new todo ...')));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Sending new todo ...'),
+                                ),
+                              );
 
                               await Api.newTodo(model.jwt, model.newTodo)
                                   .then((Todo t) {
@@ -98,9 +102,11 @@ class _TodoDetailsState extends State<TodoDetails> {
                               });
                             }
                           } catch (e) {
-                            // ignore: deprecated_member_use
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text((e as AppError).message)));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text((e as AppError).message),
+                              ),
+                            );
                           }
                         }
                       },

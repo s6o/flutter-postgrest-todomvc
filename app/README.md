@@ -5,7 +5,7 @@ the backend database.
 
 ## Requirements
 
-* Flutter - beta channel, for Flutter Web
+* Flutter >= 2.x
 
 ## Run Web
 
