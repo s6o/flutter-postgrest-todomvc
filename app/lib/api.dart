@@ -9,14 +9,14 @@ import 'package:todomvc/serializer.dart';
 
 class Api {
   static bool _isApp = false;
-  static String _baseUrlApp = 'https://332243c48c25.ngrok.io';
-  static String _baseUrlWeb = 'http://localhost:3000';
-  static String _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
+  static Uri _baseUrlApp = Uri(scheme: 'https', host: '332243c48c25.ngrok.io');
+  static Uri _baseUrlWeb = Uri(scheme: 'http', host: 'localhost', port: 3000);
+  static Uri _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
 
   static Future<Todo> deleteTodo(Jwt jwt, Todo t) async {
     try {
       http.Response r = await http.delete(
-        '$_baseUrl/todos?id=eq.${t.id}',
+        _baseUrl.replace(path: 'todos', query: 'id=eq.${t.id}'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${jwt.token}',
@@ -31,7 +31,7 @@ class Api {
   static Future<Jwt> login(Credentials credentials) async {
     try {
       http.Response r = await http.post(
-        '$_baseUrl/rpc/login',
+        _baseUrl.replace(path: 'rpc/login'),
         headers: {
           'Content-Type': 'application/json',
           'Content-Profile': 'app_auth',
@@ -53,7 +53,7 @@ class Api {
         return Future.error(AppError('New Todo requires token.'));
       }
       http.Response r = await http.post(
-        '$_baseUrl/rpc/user_new_todo',
+        _baseUrl.replace(path: 'rpc/user_new_todo'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${jwt.token}',
@@ -75,7 +75,7 @@ class Api {
   static Future<List<Todo>> todos(Jwt jwt) async {
     try {
       http.Response r = await http.post(
-        '$_baseUrl/rpc/user_todos',
+        _baseUrl.replace(path: 'rpc/user_todos'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${jwt.token}',
@@ -100,7 +100,8 @@ class Api {
 
   static Future<bool> toggle(Jwt jwt, Todo t) async {
     try {
-      http.Response r = await http.patch('$_baseUrl/todos?id=eq.${t.id}',
+      http.Response r = await http.patch(
+          _baseUrl.replace(path: 'todos', query: 'id=eq.${t.id}'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ${jwt.token}',
@@ -117,7 +118,8 @@ class Api {
       if (jwt.token == null || jwt.token.isEmpty) {
         return Future.error(AppError('Todo update requires token.'));
       }
-      http.Response r = await http.patch('$_baseUrl/todos?id=eq.${t.id}',
+      http.Response r = await http.patch(
+          _baseUrl.replace(path: 'todos', query: 'id=eq.${t.id}'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ${jwt.token}',
