@@ -10,26 +10,30 @@ import 'package:todomvc/models/todo.dart';
 import 'main.mapper.g.dart' show initializeJsonMapper;
 
 void main() {
-  initializeJsonMapper();
-  JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
-    typeOf<List<Todo>>(): (value) => value.cast<Todo>(),
-  }));
+  initializeJsonMapper(adapters: [
+    JsonMapperAdapter(valueDecorators: {
+      typeOf<List<Todo>>(): (value) => value.cast<Todo>(),
+    })
+  ]);
 
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppModel(),
-      child: TodoMVC(),
+      child: const TodoMVC(),
     ),
   );
 }
 
 class TodoMVC extends StatefulWidget {
+  const TodoMVC({super.key});
+
   @override
-  _TodoMVCState createState() => _TodoMVCState();
+  State<TodoMVC> createState() => _TodoMVCState();
 }
 
 class _TodoMVCState extends State<TodoMVC> {
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,26 +45,24 @@ class _TodoMVCState extends State<TodoMVC> {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Consumer<AppModel>(
-            builder: (BuildContext ctx, AppModel model, Widget w) {
-              return Text('Todos ${model.filterTitle}');
-            },
+            builder: (context, model, _) => Text('Todos ${model.filterTitle}'),
           ),
         ),
         body: Consumer<AppModel>(
-          builder: (BuildContext ctx, AppModel model, Widget _) =>
-              model.isAuthorized ? Todos() : LoginPage(),
+          builder: (context, model, _) =>
+              model.isAuthorized ? const Todos() : const LoginPage(),
         ),
         drawer: Consumer<AppModel>(
-          builder: (BuildContext ctx, AppModel model, Widget w) {
+          builder: (context, model, _) {
             return Drawer(
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  DrawerHeader(
-                    child: Text('TodoMVC'),
+                  const DrawerHeader(
                     decoration: BoxDecoration(
                       color: Colors.blue,
                     ),
+                    child: Text('TodoMVC'),
                   ),
                   if (model.isAuthorized) ..._authorizedItems(context, model),
                 ],
@@ -75,39 +77,40 @@ class _TodoMVCState extends State<TodoMVC> {
   List<Widget> _authorizedItems(BuildContext context, AppModel model) {
     return <Widget>[
       ListTile(
-          title: Text('Logout'),
+          title: const Text('Logout'),
           onTap: () {
             model.unAuthorize();
-            _scaffoldKey.currentState.openEndDrawer();
+            _scaffoldKey.currentState?.openEndDrawer();
           }),
-      Divider(),
+      const Divider(),
       SwitchListTile(
-          title: Text('All'),
-          value: model.hasFilter(TodoFilter.All),
+          title: const Text('All'),
+          value: model.hasFilter(TodoFilter.all),
           onChanged: (bool b) {
-            model.setFilter(b ? TodoFilter.All : TodoFilter.Active);
-            _scaffoldKey.currentState.openEndDrawer();
-          }),
-      SwitchListTile(
-          title: Text('Active'),
-          value: model.hasFilter(TodoFilter.Active),
-          onChanged: (bool b) {
-            model.setFilter(b ? TodoFilter.Active : TodoFilter.Completed);
-            _scaffoldKey.currentState.openEndDrawer();
+            model.setFilter(b ? TodoFilter.all : TodoFilter.active);
+            _scaffoldKey.currentState?.openEndDrawer();
           }),
       SwitchListTile(
-          title: Text('Completed'),
-          value: model.hasFilter(TodoFilter.Completed),
+          title: const Text('Active'),
+          value: model.hasFilter(TodoFilter.active),
           onChanged: (bool b) {
-            model.setFilter(b ? TodoFilter.Completed : TodoFilter.All);
-            _scaffoldKey.currentState.openEndDrawer();
+            model.setFilter(b ? TodoFilter.active : TodoFilter.completed);
+            _scaffoldKey.currentState?.openEndDrawer();
           }),
-      Divider(),
+      SwitchListTile(
+          title: const Text('Completed'),
+          value: model.hasFilter(TodoFilter.completed),
+          onChanged: (bool b) {
+            model.setFilter(b ? TodoFilter.completed : TodoFilter.all);
+            _scaffoldKey.currentState?.openEndDrawer();
+          }),
+      const Divider(),
       ListTile(
-        title: Text('New'),
+        title: const Text('New'),
         onTap: () {
-          _scaffoldKey.currentState.openEndDrawer();
-          _scaffoldKey.currentState.showBottomSheet((context) => TodoDetails());
+          _scaffoldKey.currentState?.openEndDrawer();
+          _scaffoldKey.currentState
+              ?.showBottomSheet((context) => const TodoDetails());
         },
       ),
     ];

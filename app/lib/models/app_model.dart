@@ -4,9 +4,9 @@ import 'package:todomvc/models/auth.dart';
 import 'package:todomvc/models/todo.dart';
 
 enum TodoFilter {
-  All,
-  Active,
-  Completed,
+  all,
+  active,
+  completed,
 }
 
 class AppModel extends ChangeNotifier {
@@ -21,11 +21,11 @@ class AppModel extends ChangeNotifier {
   AppModel()
       : _appError = AppError.empty(),
         _credentials = Credentials(),
-        _jwt = null,
+        _jwt = Jwt(''),
         _filters = {
-          TodoFilter.All: true,
-          TodoFilter.Active: false,
-          TodoFilter.Completed: false,
+          TodoFilter.all: true,
+          TodoFilter.active: false,
+          TodoFilter.completed: false,
         },
         _filterTitle = '',
         _todos = [],
@@ -61,7 +61,7 @@ class AppModel extends ChangeNotifier {
   }
 
   bool hasFilter(TodoFilter tf) {
-    return _filters[tf];
+    return _filters[tf]!;
   }
 
   Jwt get jwt {
@@ -75,20 +75,20 @@ class AppModel extends ChangeNotifier {
   }
 
   bool get isAuthorized {
-    return _jwt != null && _jwt.token.isNotEmpty;
+    return _jwt.token.isNotEmpty;
   }
 
   void setFilter(TodoFilter tf) {
     _filters = _filters.map((key, value) => MapEntry(key, false));
     _filters.update(tf, (_) => true);
     switch (tf) {
-      case TodoFilter.Active:
+      case TodoFilter.active:
         _filterTitle = '(active)';
         break;
-      case TodoFilter.Completed:
+      case TodoFilter.completed:
         _filterTitle = '(completed)';
         break;
-      case TodoFilter.All:
+      case TodoFilter.all:
       default:
         _filterTitle = '';
     }
@@ -97,13 +97,13 @@ class AppModel extends ChangeNotifier {
 
   List<Todo> get todos {
     TodoFilter filter = _filters.keys
-        .fold(TodoFilter.All, (f, TodoFilter tf) => _filters[tf] ? tf : f);
+        .fold(TodoFilter.all, (f, TodoFilter tf) => _filters[tf]! ? tf : f);
     switch (filter) {
-      case TodoFilter.Active:
+      case TodoFilter.active:
         return _todos.where((Todo t) => t.done == false).toList();
-      case TodoFilter.Completed:
+      case TodoFilter.completed:
         return _todos.where((Todo t) => t.done == true).toList();
-      case TodoFilter.All:
+      case TodoFilter.all:
       default:
         return _todos;
     }
@@ -119,7 +119,7 @@ class AppModel extends ChangeNotifier {
   }
 
   void unAuthorize() {
-    _jwt = null;
+    _jwt = Jwt('');
     notifyListeners();
   }
 

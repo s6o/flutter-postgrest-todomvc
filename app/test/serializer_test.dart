@@ -11,7 +11,7 @@ void main() {
   group('Jwt serialization/deserialization', () {
     final jwt = Jwt(
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTYwNzI1MTE2MH0.-87h32BxcaC0N8MhFA2fpPJYpZsEkr2oybgrQGVha6I');
-    final jwtJson =
+    const jwtJson =
         '{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTYwNzI1MTE2MH0.-87h32BxcaC0N8MhFA2fpPJYpZsEkr2oybgrQGVha6I"}';
 
     setUp(() {});
@@ -27,7 +27,7 @@ void main() {
     test('- from JSON', () {
       final j = fromJson<Jwt>(jwtJson);
       expect(
-          j.token,
+          j!.token,
           equals(
               'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXBwdXNlciIsImVtYWlsIjoiam9obi5kb2VAbG9zdC5uZXQiLCJ1aWQiOjEsImV4cCI6MTYwNzI1MTE2MH0.-87h32BxcaC0N8MhFA2fpPJYpZsEkr2oybgrQGVha6I'));
     });
@@ -36,7 +36,7 @@ void main() {
   group('Todo serialization/deserialization', () {
     final defaultDeadline = Todo.dueDefault();
     final defaultTodo = Todo(task: 'Buy milk', due: defaultDeadline);
-    final dbTodoJson =
+    const dbTodoJson =
         '{"id": 1,"task": "Buy milk","due": "2020-11-30 21:02:33.045Z","done": true}';
 
     setUp(() {});
@@ -50,7 +50,7 @@ void main() {
     });
 
     test('- from JSON', () {
-      final t = fromJson<Todo>(dbTodoJson);
+      final t = fromJson<Todo>(dbTodoJson)!;
       expect(t.id, equals(1));
       expect(t.task, equals("Buy milk"));
       expect(t.done, equals(true));

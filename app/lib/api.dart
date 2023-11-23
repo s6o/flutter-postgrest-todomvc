@@ -8,10 +8,12 @@ import 'package:todomvc/models/todo.dart';
 import 'package:todomvc/serializer.dart';
 
 class Api {
-  static bool _isApp = false;
-  static Uri _baseUrlApp = Uri(scheme: 'https', host: '332243c48c25.ngrok.io');
-  static Uri _baseUrlWeb = Uri(scheme: 'http', host: 'localhost', port: 3000);
-  static Uri _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
+  static const bool _isApp = false;
+  static final Uri _baseUrlApp =
+      Uri(scheme: 'https', host: '332243c48c25.ngrok.io');
+  static final Uri _baseUrlWeb =
+      Uri(scheme: 'http', host: 'localhost', port: 3000);
+  static final Uri _baseUrl = _isApp ? _baseUrlApp : _baseUrlWeb;
 
   static Future<Todo> deleteTodo(Jwt jwt, Todo t) async {
     try {
@@ -22,7 +24,9 @@ class Api {
           'Authorization': 'Bearer ${jwt.token}',
         },
       );
-      return r.statusCode == 204 ? t : Future.error(fromJson<AppError>(r.body));
+      return r.statusCode == 204
+          ? Future.value(t)
+          : Future.error(fromJson<AppError>(r.body)!);
     } catch (e) {
       return Future.error(AppError(e.toString()));
     }
@@ -40,8 +44,8 @@ class Api {
         body: toJson<Credentials>(credentials),
       );
       return r.statusCode == 200
-          ? fromJson<Jwt>(r.body)
-          : Future.error(fromJson<AppError>(r.body));
+          ? Future.value(fromJson<Jwt>(r.body))
+          : Future.error(fromJson<AppError>(r.body)!);
     } catch (e) {
       return Future.error(AppError(e.toString()));
     }
@@ -49,7 +53,7 @@ class Api {
 
   static Future<Todo> newTodo(Jwt jwt, Todo t) async {
     try {
-      if (jwt.token == null || jwt.token.isEmpty) {
+      if (jwt.token.isEmpty) {
         return Future.error(AppError('New Todo requires token.'));
       }
       http.Response r = await http.post(
@@ -64,9 +68,9 @@ class Api {
       );
       return r.statusCode == 200
           ? kIsWeb
-              ? Todo.fromMap(jsonDecode(r.body))
-              : fromJson<Todo>(r.body)
-          : Future.error(fromJson<AppError>(r.body));
+              ? Future.value(Todo.fromMap(jsonDecode(r.body)))
+              : Future.value(fromJson<Todo>(r.body))
+          : Future.error(fromJson<AppError>(r.body)!);
     } catch (e) {
       return Future.error(AppError(e.toString()));
     }
@@ -88,10 +92,10 @@ class Api {
           List<dynamic> tmaps = jsonDecode(r.body);
           return tmaps.map((m) => Todo.fromMap(m)).toList();
         } else {
-          return fromJson<List<Todo>>(r.body);
+          return fromJson<List<Todo>>(r.body)!;
         }
       } else {
-        return Future.error(fromJson<AppError>(r.body));
+        return Future.error(fromJson<AppError>(r.body)!);
       }
     } catch (e) {
       return Future.error(AppError(e.toString()));
@@ -106,7 +110,7 @@ class Api {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ${jwt.token}',
           },
-          body: '\{"done":${!t.done}\}');
+          body: '{"done":${!t.done}}');
       return r.statusCode == 204 ? true : false;
     } catch (e) {
       return Future.error(AppError(e.toString()));
@@ -115,7 +119,7 @@ class Api {
 
   static Future<Todo> updateTodo(Jwt jwt, Todo t) async {
     try {
-      if (jwt.token == null || jwt.token.isEmpty) {
+      if (jwt.token.isEmpty) {
         return Future.error(AppError('Todo update requires token.'));
       }
       http.Response r = await http.patch(
@@ -125,7 +129,9 @@ class Api {
             'Authorization': 'Bearer ${jwt.token}',
           },
           body: toJson<Todo>(t));
-      return r.statusCode == 204 ? t : Future.error(fromJson<AppError>(r.body));
+      return r.statusCode == 204
+          ? Future.value(t)
+          : Future.error(fromJson<AppError>(r.body)!);
     } catch (e) {
       return Future.error(AppError(e.toString()));
     }

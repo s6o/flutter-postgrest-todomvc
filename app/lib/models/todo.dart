@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart'
     show jsonSerializable, JsonProperty;
 
@@ -7,31 +6,36 @@ class Todo {
   String task;
   DateTime due;
   bool done;
-  DateTime doneAt;
 
   @JsonProperty(ignoreIfNull: true)
-  int id;
+  DateTime? doneAt;
 
-  Todo({@required this.task, due, this.done = false, doneAt, this.id})
-      : this.due = due ?? dueDefault(),
-        this.doneAt = done ? (doneAt ?? DateTime.now().toUtc()) : doneAt,
+  @JsonProperty(ignoreIfNull: true)
+  int? id;
+
+  Todo(
+      {required this.task,
+      DateTime? due,
+      this.done = false,
+      DateTime? doneAt,
+      this.id})
+      : due = due ?? dueDefault(),
+        doneAt = done ? (doneAt ?? DateTime.now().toUtc()) : doneAt,
         super();
 
   Todo.fromMap(Map<String, dynamic> m)
       : task = m['task'],
-        due = DateTime.tryParse(m['due']),
+        due = DateTime.tryParse(m['due']) ?? dueDefault(),
         done = m['done'] ?? false,
         doneAt = (m['done'] ?? false)
             ? m['done_at'] != null
-                ? DateTime.tryParse(m['done_at']) ?? DateTime.now().toUtc()
-                : DateTime.now().toUtc()
-            : m['done_at'] != null
                 ? DateTime.tryParse(m['done_at'])
-                : null,
-        id = m['id'] ?? null;
+                : null
+            : null,
+        id = m['id'];
 
   static DateTime dueDefault() {
-    return DateTime.now().toUtc().add(Duration(days: 1));
+    return DateTime.now().toUtc().add(const Duration(days: 1));
   }
 }
 

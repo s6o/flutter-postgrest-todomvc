@@ -1,11 +1,18 @@
 # TodoMVC
 
-A TodoMVC with Flutter for Android, iOS and Web, and with PostgREST to control
-the backend database.
+A TodoMVC with Flutter and PostgREST as backend server with Postgres.
 
 ## Requirements
 
-* Flutter >= 2.x
+* Flutter >= 3.10.x
+
+## JSON decoder/encoder generation
+
+Configuration is [build.yaml](./build.yaml)
+
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
 
 ## Run Web
 
@@ -14,6 +21,8 @@ The app defaults to Flutter Web.
 ```bash
 flutter run -d chrome
 ```
+
+The test logins can be found in the [development seed file](./../server/seed-development.sql)
 
 ## Testing Android, iOS with ngrok
 

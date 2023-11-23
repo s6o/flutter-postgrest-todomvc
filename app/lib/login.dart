@@ -6,10 +6,10 @@ import 'package:todomvc/models/auth.dart';
 import 'package:todomvc/models/app_error.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -22,49 +22,55 @@ class _LoginPageState extends State<LoginPage> {
       child: Form(
         key: _formKey,
         child: Consumer<AppModel>(
-          builder: (BuildContext ctx, AppModel model, Widget w) {
+          builder: (ctx, model, _) {
             return Column(
               children: <Widget>[
                 TextFormField(
                   autocorrect: false,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                   textCapitalization: TextCapitalization.none,
-                  validator: (v) => v.isEmpty ? 'Email is required' : null,
-                  onSaved: (v) => model.credentials.email = v,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Email is required' : null,
+                  onSaved: (v) => model.credentials.email = v!,
                 ),
                 TextFormField(
                   autocorrect: false,
-                  decoration: InputDecoration(labelText: 'Password'),
+                  decoration: const InputDecoration(labelText: 'Password'),
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
                   textCapitalization: TextCapitalization.none,
-                  validator: (v) => v.isEmpty ? 'Password is required' : null,
-                  onSaved: (v) => model.credentials.pass = v,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Password is required' : null,
+                  onSaved: (v) => model.credentials.pass = v!,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
                       try {
                         var ctrl = Scaffold.of(context).showBottomSheet(
-                            (context) => Text('Sending credentials ...'));
+                            (context) => const Text('Sending credentials ...'));
                         Jwt jwt = await Api.login(model.credentials);
                         ctrl.close();
 
-                        ctrl = Scaffold.of(context).showBottomSheet(
-                            (context) => Text('Fetching todos ...'));
-                        model.todos = await Api.todos(jwt);
-                        ctrl.close();
-                        model.jwt = jwt;
+                        if (context.mounted) {
+                          ctrl = Scaffold.of(context).showBottomSheet(
+                              (context) => const Text('Fetching todos ...'));
+                          model.todos = await Api.todos(jwt);
+                          ctrl.close();
+                          model.jwt = jwt;
+                        }
                       } catch (e) {
-                        Scaffold.of(context).showBottomSheet(
-                            (context) => Text((e as AppError).message));
+                        if (context.mounted) {
+                          Scaffold.of(context).showBottomSheet(
+                              (context) => Text((e as AppError).message));
+                        }
                       }
                     }
                   },
-                  child: Text('Submit'),
+                  child: const Text('Submit'),
                 ),
               ],
             );

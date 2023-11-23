@@ -5,15 +5,28 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Web",
+      "name": "Web (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "chrome"
+      "deviceId": "chrome",
+      "flutterMode": "debug"
     },
     {
-      "name": "App",
+      "name": "TodoMVC",
       "request": "launch",
       "type": "dart"
+    },
+    {
+      "name": "TodoMVC (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "TodoMVC (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
     }
   ]
 }
