@@ -2,9 +2,9 @@
 
 ## SW Requirements
 
-* [Postgres](https://www.postgresql.org/) >= 10.x
-* [dbmate](https://github.com/amacneil/dbmate/releases) >= 1.9.1
-* [PostgREST](https://github.com/PostgREST/postgrest/releases) >= 7.0.1
+* [Postgres](https://www.postgresql.org/) >= 12.x
+* [dbmate](https://github.com/amacneil/dbmate/releases) >= 1.15.x
+* [PostgREST](https://github.com/PostgREST/postgrest/releases) >= 11.x
 
 In additon to the *Postgres* installation, the *dbmate* CLI is expected to be
 found in *PATH* and the *postgrest* binary is expected to be installed into
@@ -21,58 +21,39 @@ openssl rand -base64 32 >> .jwtsecret
 
 ```bash
 cd server
-psql -d postgres -c "CREATE DATABASE flutter_todomvc"
-./dbmate.sh migrate
-```
-
-or with overridding the default Postgres user 'postgres'
-
-```bash
-cd server
-psql -U ols -d postgres -c "CREATE DATABASE flutter_todomvc"
-PGUSER=ols ./dbmate.sh migrate
+psql -U postgres "CREATE DATABASE flutter_todomvc"
+PGUSER=postgres ./dbmate.sh migrate
 ```
 
 ### Database developemnt seed
 
 ```bash
 cd server
-psql -d flutter_todomvc -f ./seed-development.sql
+psql -U postgres -d flutter_todomvc -f ./seed-development.sql
 ```
 
-or with overridding the default Postgres user 'postgres'
+## PostgREST setup
+
+### Download PostgREST
+
+#### MacOS (intel, M1)
+
+```bash
+brew install postgrest
+ln -s `which postgrest`
+```
+
+#### Linux
 
 ```bash
 cd server
-psql -U ols -d flutter_todomvc -f ./seed-development.sql
+wget https://github.com/PostgREST/postgrest/releases/download/v11.2.2/postgrest-v11.2.2-linux-static-x64.tar.xz
+tar -xJf postgrest-v11.2.2-linux-static-x64.tar.xz
 ```
 
-## Starting server
-
-### MacOS
+### Starting the server
 
 ```bash
 cd server
-wget https://github.com/PostgREST/postgrest/releases/download/v7.0.1/postgrest-v7.0.1-osx.tar.xz
-tar -xJf postgrest-v7.0.1-osx.tar.xz
-```
-
-### Linux
-
-```bash
-cd server
-wget https://github.com/PostgREST/postgrest/releases/download/v7.0.1/postgrest-v7.0.1-linux-x64-static.tar.xz
-tar -xJf postgrest-v7.0.1-linux-x64-static.tar.xz
-```
-
-```bash
-cd server
-./pgrest.sh
-```
-
-or with overridding the default Postgres user 'postgres'
-
-```bash
-cd server
-PGUSER=ols ./pgrest.sh
+PGUSER=postgres ./pgrest.sh
 ```
