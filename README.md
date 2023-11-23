@@ -12,3 +12,4 @@ for user activation and notification via email.
 The [app/](./app/README.md) and [server/](./server/README.md) directories each
 have their respective README-s with more details for setup.
 
+![UI panels](./flutter-postgrest-todomvc-ui-small.png)
